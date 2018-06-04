@@ -1,0 +1,224 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="description" content="听见下雨的声音">
+  <meta name="author" content="陈汝丹">
+  <meta name="keywords" content="【David Silver强化学习公开课之二】马尔可夫决策过程MDP, 陈汝丹, 陈汝丹">
+  <title>【David Silver强化学习公开课之二】马尔可夫决策过程MDP - 陈汝丹</title>
+  <link rel="canonical" href="chenrudan.github.io/blog/2016/06/12/reinforcementlearninglesssion2.html">
+  <link rel="icon" href="/res/img/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/res/img/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/res/css/public.css">
+  <link rel="stylesheet" href="/res/css/light.css">
+  <script src="/res/js/light.js"></script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+</head>
+<body>
+  <div id="blog">
+    <div class="sidebar">
+  <div class="profilepic">
+    <a href="/"><img src="http://7xkmdr.com1.z0.glb.clouddn.com/90fba609961616fae2b927.jpg" alt="logo"></img></a>
+  </div>
+  <h1 class="title"><a href="/">陈汝丹</a></h1>
+  <h2 class="sub-title">个人博客</h2>
+  <nav id="nav">
+    <ul>
+    
+      <li><a href="/page/timing.html"><i class="fa fa-clock-o"></i>&nbsp;时间轴</a></li>
+    
+      <li><a href="/page/category.html"><i class="fa fa-tags"></i>&nbsp;分类</a></li>
+    
+      <li><a href="/page/about.html"><i class="fa fa-paper-plane-o"></i>&nbsp;关于</a></li>
+    
+    </ul>
+  </nav>  
+  <nav id="sub-nav">
+    <a class="weibo " href="http://weibo.com/u/3842815916" title="新浪微博" target="_blank"><i class="fa fa-weibo"></i></a>
+    <a class="github" href="https://github.com/chenrudan" title="GitHub" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    <a class="rss" href="/page/feed.xml" title="RSS订阅" target="_blank"><i class="fa fa-rss"></i></a>
+  </nav>
+  <div id="license">
+    <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank" title="本站所有作品采用：&#10;知识共享《署名 非商业性使用 相同方式共享 3.0》&#10;进行许可" >
+    <img alt="License" height="31" width="88" src="data:image/png;base64,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" /></a>
+  </div>
+</div>
+    <div class="main">
+    <header class="post-header">
+  <h1 class="post-title"><a href="/blog/2016/06/12/reinforcementlearninglesssion2.html">【David Silver强化学习公开课之二】马尔可夫决策过程MDP</a></h2>
+  <p class="post-meta">
+    <i class="fa fa-calendar"></i>
+    2016年06月12日
+    <i class="space"></i>
+    <i class="fa fa-tags"></i>
+    <a class="post-category" href="/page/category.html#project experience">project experience</a>
+  </p>
+</header>
+
+<div class="post-main">
+	<p>【转载请注明出处】<a href="http://chenrudan.github.io/">chenrudan.github.io</a></p>
+
+<p>本文是David Silver强化学习公开课第二课的总结笔记。主要介绍了马尔可夫过程(MP)、马尔可夫奖赏过程(MRP)、马尔可夫决策过程(MDP)是什么，以及它们涉及到的一些概念，结合了课程ppt给出的例子对概念有了一些直观的了解。</p>
+
+<p>本课视频地址:<a href="https://www.youtube.com/watch?v=lfHX2hHRMVQ&amp;list=PL5X3mDkKaJrL42i_jhE4N-p6E2Ol62Ofa&amp;index=2">RL Course by David Silver - Lecture 2: Markov Decision Process</a>。</p>
+
+<p>本课ppt地址:<a href="http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching_files/MDP.pdf">http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching_files/MDP.pdf</a>。</p>
+
+<p>文章的内容是课程的一个总结和讨论，会按照自己的理解来组织。个人知识不足再加上英语听力不是那么好可能会有一些理解不准的地方，欢迎一起讨论。</p>
+
+<h4 id="section">1.基础概念</h4>
+
+<p>状态集合S: 有限状态state集合，s表示某个特定状态</p>
+
+<p>动作集合A: 有限动作action集合，a表示某个特定动作</p>
+
+<p>状态转移矩阵P: 矩阵每一项是从S中一个状态s转移到另一个状态{s’}的概率$P_{ss’} = P[S_{t+1}=s’|S_t=s]$以及执行动作a后从一个状态转移到另一个概率为$P_{ss’}^a = P[S_{t+1}=s’ | S_t=s, A_t=a]$。这里的状态转移矩阵决定了马尔可夫性质，即未来状态只与当前状态有关而与过去状态无关。矩阵一行之和为1。</p>
+
+<p>策略$\pi$: 状态s下执行动作a的概率，$\pi(a|s) = P[A_t=a|S_t=s]$</p>
+
+<p>reward函数ER: 这个函数是immediate reward的期望，即在时刻t的时候，agent执行某个action后下一个时刻立即能得到的reward $R_{t+1}$的期望，它由当前的状态决定。状态s下immediate reward期望为$ER_s = E[R_{t+1}|S_t = s]$，状态s下执行动作a后immediate reward期望为$ER_s^a = E[R_{t+1}|S_t=s, A_t=a]$</p>
+
+<p>Return $G_t$与discount $\gamma$: $G_t$是t时刻之后未来执行一组action能够获得的reward，即t+1、t+2、t+3…未来所有时刻reward之和，是未来时刻reward在当前时刻的体现，但是越往后的时刻它能反馈回来的reward需要乘以一个discount系数，系数$\gamma \in [0,1]$会产生一个打折的效果，这是因为并没有一个完美的模型能拟合出未来会发生什么，未来具有不确定性，同时这样计算会方便，避免了产生状态的无限循环，在某些情况下，即时产生的reward即$R_{t+1}$会比未来时刻更值得关注，符合人的直觉。因此$G_t = R_{t+1}+\gamma R_{t+2}+…=\sum_{k=0}^{\infty}\gamma^kR_{t+k+1}$</p>
+
+<p>状态值函数$v(s)$: 即基于t时刻的状态s能获得的return的期望，$v(s)=E[G_t|S_t=s]$，这里是仅按照状态转移矩阵选择执行何种动作，如果加入动作选择策略，那么函数就变成了$v_{\pi}(s) = E_{\pi}[G_t|S_t=s]$</p>
+
+<p>动作值函数$q_{\pi}(s,a)$: 基于t时刻的状态s，选择特定的一个action后能获得的return期望，这里的选择过程就隐含加入了策略。$q_{\pi}(s,a)= E_{\pi}[G_t|S_t=s, A_t=a]$</p>
+
+<h4 id="mdp">2. MDP与实例分析</h4>
+
+<p><strong>马尔可夫链/过程(Markov Chain/Process)</strong>，是具有markov性质的随机状态s1,s2,…序列。由$[S,P]$组成。如下图1圆圈内是状态，箭头上的值是状态之间的转移概率。class是指上第几堂课，facebook指看facebook网页，pub指去酒吧，pass指通过考试，sleep指睡觉。例如处于class1有0.5的概率转移到class2，或者0.5的概率转移到facebook。</p>
+
+<p><img src="http://7xkmdr.com1.z0.glb.clouddn.com/rl2_1.png" alt="1" height="30%" width="30%" hspace="300" /></p>
+
+<font size="2"><center>图1 Markov Process Example(图片来源[1])</center></font>
+
+<p>从而可以产生非常多的随机序列，例如C1 C2 C3 Pass Sleep或者C1 FB FB C1 C2 C3 Pub C1 FB FB FB C1 C2 C3 Pub C2 Sleep等。这些随机状态的序列就是马尔可夫过程。这里可以看到有一些状态发生了循环。</p>
+
+<p><strong>马尔可夫奖赏过程(Markov Reward Process)</strong>，即马尔可夫过程加上value judgement，value judegment即判断一个像上面一个特定的随机序列有多少累积reward，也就是计算出$v(s)$。它由$[S,P,R,\gamma]$组成，示意图如下。</p>
+
+<p><img src="http://7xkmdr.com1.z0.glb.clouddn.com/rl2_2.png" alt="1" height="30%" width="30%" hspace="300" /></p>
+
+<font size="2"><center>图2 Markov Reward Process Example(图片来源[1])</center></font>
+
+<p>可以看出比图1多了红色部分即R，但是R的取值只决定了immediate reward，在实际过程中肯定是需要考虑到后面步骤的reward才能确定当前的选择是否正确。而实际上$v(s)$由两部分组成，一个是immediate reward，一个是后续状态产生的discounted reward，推导如下(这里我觉得视频里似乎把$ER_s$与$R_{t+1}$的取值当成一样的了)，推导出来的这个式子称为Bellman方程。</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{split}
+v(s) = &E[G_t|S_t=s] \\
+       = &E[R_{t+1} + \gamma (R_{t+2}+\gamma R_{t+3}+...) | S_t=s] \\
+        = &E[R_{t+1} + \gamma G_{t+1} | S_t=s] \\
+        = &ER_s + \gamma \sum_{s'\in S}P_{ss'}v(s')
+\end{split} %]]></script>
+
+<p>那么每一个状态下能得到的状态值函数取值或者说累积reward如下所示，即原来写着class、sleep状态的地方替换成了数字(这里假设$\gamma = 1$)。可以从sleep状态出发，推导出每个状态的状态值函数取值，如右上角红色公式所示。最右的-23与-13，列出二元一次方程组即可求出。</p>
+
+<p><img src="http://7xkmdr.com1.z0.glb.clouddn.com/rl2_3.png" alt="1" height="30%" width="30%" hspace="300" /></p>
+
+<font size="2"><center>图3 State Value Function Example(图片来源[1])</center></font>
+
+<p>将Bellman方程表达成矩阵形式，变成了$v = ER + \gamma Pv$，是个线性等式，直接求解得到$v = (I - \gamma P)^{-1}ER$。而这样求解的话计算复杂度是$O(n^3)$，所以一般通过动态规划、蒙特卡洛估计与Temporal-Difference learning这些迭代的方式求解。</p>
+
+<p><strong>马尔可夫决策过程(Markov Decision Process)</strong>，它是拥有决策能力的马尔可夫奖赏过程，个人理解是MRP是将所有情况都遍历，而MDP则是选择性的遍历某些情况。它由$[S,A,P,R_s^a,\gamma,\pi(a|s)]$组成，并且拥有两个值函数$v_{\pi(s)}$和$q_{\pi}(s,a)$。根据这两个值函数的定义，它们之间的关系表示为$v_{\pi}(s) = \sum_{a\in A}\pi(a|s)q_{\pi}(s,a)$以及$q_{\pi}(s,a) = R_s^a + \gamma \sum_{s’\in S}P_{ss’}^av_{\pi}(s’)$。第二个式子是说当选择一个action之后，转移到不同状态下之后获取的reward之和是多少。将两个式子互相代入，可以得到如下的Bellman期望方程。</p>
+
+<script type="math/tex; mode=display">v_{\pi}(s) = \sum_{a\in A}\pi(a|s)(R_s^a + \gamma \sum_{s'\in S}P_{ss'}^av_{\pi}(s'))\\
+        q_{\pi}(s,a) = R_s^a + \gamma \sum_{s'\in S}P_{ss'}^a\sum_{a'\in A}\pi(a'|s')q_{\pi}(s',a')</script>
+
+<p>下图是一个MDP的例子，箭头上的单词表示action，与MRP不同的是，这里给出的immediate reward是同时在某个状态s和某个动作a条件下，所以图中R不是只取决于s，而是取决于s和a。右上角的等式表达出了这一个状态的状态值函数求解过程。</p>
+
+<p><img src="http://7xkmdr.com1.z0.glb.clouddn.com/rl2_4.png" alt="1" height="30%" width="30%" hspace="300" /></p>
+
+<font size="2"><center>图4 Markov Decision Processes Example(图片来源[1])</center></font>
+
+<p>由于策略$\pi(a|s)$是可以改变的，因此两个值函数的取值不像MRP一样是固定的，那么就能从不同的取值中找到一个最大值即最优值函数(这节课没有讲如何求解)。例如下面两个图就是上面的例子能找到的最优状态值函数$v_*(s)$与最优动作值函数$q_*(s,a)$。如果知道了$q_*(s,a)$，那么也就知道了在每一步选择过程中应该选择什么样的动作。也就是说MDP需要解决的问题并不是每一步到底会获得多少累积reward，而是找到一个最优的解决方案。这两个最优值函数同样存在着一定关系，$v_*(s) = \underset{a}{max}q_*(s,a)$，从而可以推出$q_*(s,a) = R_s^a + \gamma \sum_{s’\in S}P_{ss’}^a \underset{a’}{max}q_*(s’, a’)$，这个等式称为Bellman优化方程，它不是一个线性等式，没有闭式解。通常通过值迭代、策略迭代、Q-learning、Sarsa等方法求解。</p>
+
+<p><img src="http://7xkmdr.com1.z0.glb.clouddn.com/rl2_5.png" alt="1" height="30%" width="30%" hspace="300" /></p>
+
+<font size="2"><center>图5 Optimal State-Value Function Example(图片来源[1])</center></font>
+
+<p><img src="http://7xkmdr.com1.z0.glb.clouddn.com/rl2_6.png" alt="1" height="30%" width="30%" hspace="300" /></p>
+
+<font size="2"><center>图6 Optimal Action-Value Function Example(图片来源[1])</center></font>
+
+<p>实际上一定存在这样的一个最优策略$\pi_*$。可以通过最大化$q_*(s,a)$获得。针对任意的MDP问题，总是存在一个最优的deterministic policy。</p>
+
+<p>以上是第二课的主要内容，从MP开始到MRP再到MDP，了解值函数的具体概念与reward有什么联系，重点是介绍MDP面对的问题，暂时没有提到如何解决。结合课程的例子对各个概念有比较直观的了解。但是这一课有个概念是“MDP描述了强化学习的environment，且是fully Observable的”，这个意思我暂时没明白。如果MDP是environment，那么它为什么有policy，为什么需要最大化policy，个人觉得MDP应该是fully Observable的强化学习，也就是说MDP本身描述的就是一个强化学习问题，它的状态转移矩阵和reward function就是environment，它的目标就是找到最优的动作值函数或者最优Policy。</p>
+
+<p>[1] <a href="http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching_files/MDP.pdf">http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching_files/MDP.pdf</a></p>
+
+</div>
+<div class="share">
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+  </div>
+  <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":["qzone","tsina","weixin","sqq"],"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/res/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+</div>
+<div class="pagination">
+	
+	<a class="pagination-item newer" href="/blog/2016/06/06/reinforcementlearninglesssion1.html"><i class="fa fa-arrow-left"></i>&nbsp;&nbsp;【David Silver强化学习公开课之一】强化学习入门</a>
+	
+
+	<a class="pagination-item older" href="/blog/2016/06/17/reinforcementlearninglesssion3.html">【David Silver强化学习公开课之三】动态规划解决MDP的Planning问题&nbsp;&nbsp;<i class="fa fa-arrow-right"></i></a>
+	
+</div>
+    
+<i class="space"></i>
+
+<!-- 多说评论框 start -->
+<div class="ds-thread" data-thread-key="/blog/2016/06/12/reinforcementlearninglesssion2.html" data-title="【David Silver强化学习公开课之二】马尔可夫决策过程MDP" data-url="/blog/2016/06/12/reinforcementlearninglesssion2.html"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"chenrudan"};
+		(function() {
+ 			var ds = document.createElement('script');
+			ds.type = 'text/javascript';ds.async = true;
+			ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+			ds.charset = 'UTF-8';
+			(document.getElementsByTagName('head')[0] 
+			|| document.getElementsByTagName('body')[0]).appendChild(ds);
+											
+ 		})();
+		</script>
+	<!-- 多说公共JS代码 end -->
+	
+
+    
+    </div>
+  </div>    
+  <div id="top"><a id="rocket" href="javascript:;" title="返回顶部"><i></i></a></div>
+  
+</body>
+</html>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+   (i[r].q=i[r].q||[]).push(arguments)
+ },i[r].l=1*new Date();a=s.createElement(o),
+   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62560044-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+	                  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+					                            
+	});
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
