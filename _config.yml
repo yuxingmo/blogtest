@@ -22,3 +22,5 @@ author:
         name:                                               # 豆瓣地址名称
         key:                                                # 豆瓣API Key
 
+
+theme: jekyll-theme-cayman
